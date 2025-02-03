@@ -66,7 +66,7 @@
             
             <h3>Responsable del Registro</h3>
             <label><strong>Nombre:</strong> <input type="text" id="responsable" value="Raúl Gil Yupa" required></label>
-            <label><strong>Cargo:</strong> <input type="text" list="cargos" required></label>
+            <label><strong>Cargo:</strong> <input type="text" id="cargoResponsable" list="cargos" required></label>
             <datalist id="cargos">
                 <option value="Ingeniero SSOMA"></option>
                 <option value="Supervisor de Seguridad"></option>
@@ -110,7 +110,7 @@
                 horaFin: document.getElementById("horaFin").value,
                 observaciones: document.getElementById("observaciones").value,
                 responsable: document.getElementById("responsable").value,
-                cargo: document.getElementById("cargo").value,
+                cargo: document.getElementById("cargoResponsable").value,
                 participantes: []
             };
             

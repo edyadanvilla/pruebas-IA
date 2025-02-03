@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Entrega de Ropa de Trabajo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 800px; margin: auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        h2 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        th { background-color: #f4f4f4; }
+        input, select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 5px; }
+        button { width: 100%; padding: 10px; margin-top: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #218838; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Registro de Entrega de Ropa de Trabajo</h2>
+        <form id="formRegistro">
+            <label><strong>Lugar:</strong> 
+                <select id="lugar" required>
+                    <option value="CORESHAR">CORESHAR</option>
+                    <option value="PLATAFORMA">PLATAFORMA</option>
+                </select>
+            </label>
+            <label><strong>Fecha:</strong> <input type="date" id="fecha" required></label>
+            <label><strong>Tema:</strong> <input type="text" id="tema" list="temas" required></label>
+            <datalist id="temas">
+                <option value="Seguridad en el trabajo"></option>
+                <option value="Uso de EPIs"></option>
+                <option value="Normas de seguridad"></option>
+            </datalist>
+            <label><strong>Nombre del Capacitador:</strong> <input type="text" id="capacitador" list="capacitadores" required></label>
+            <datalist id="capacitadores">
+                <option value="Ing. Juan Pérez"></option>
+                <option value="Ing. María Gómez"></option>
+                <option value="Ing. Carlos Ramírez"></option>
+            </datalist>
+            <label><strong>Hora de Inicio:</strong> <input type="time" id="horaInicio" required></label>
+            <label><strong>Hora de Fin:</strong> <input type="time" id="horaFin" required></label>
+            
+            <h3>Lista de Participantes y Tallas</h3>
+            <table id="tablaParticipantes">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Nombre Completo</th>
+                        <th>Cargo</th>
+                        <th>Chaleco</th>
+                        <th>Pantalón</th>
+                        <th>Camisa</th>
+                        <th>Chompa</th>
+                        <th>Casaca</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><input type="text" list="nombres" required></td>
+                        <td><input type="text" required></td>
+                        <td><input type="text" required></td>
+                        <td><input type="text" required></td>
+                        <td><input type="text" required></td>
+                        <td><input type="text" required></td>
+                        <td><input type="text" required></td>
+                    </tr>
+                </tbody>
+            </table>
+            <datalist id="nombres">
+                <option value="Juan Pérez"></option>
+                <option value="María Gómez"></option>
+                <option value="Carlos Ramírez"></option>
+            </datalist>
+            <button type="button" onclick="agregarFila()">Agregar Participante</button>
+            
+            <h3>Observaciones</h3>
+            <textarea id="observaciones" rows="3" style="width:100%;"></textarea>
+            
+            <h3>Responsable del Registro</h3>
+            <label><strong>Nombre:</strong> <input type="text" id="responsable" value="Raúl Gil Yupa" required></label>
+            <label><strong>Cargo:</strong> <input type="text" list="cargos" required></label>
+            <datalist id="cargos">
+                <option value="Ingeniero SSOMA"></option>
+                <option value="Supervisor de Seguridad"></option>
+            </datalist>
+            
+            <h3>Firma (Código QR)</h3>
+            <div id="qrcode"></div>
+            
+            <button type="submit">Enviar Registro</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("fecha").valueAsDate = new Date();
+        document.getElementById("horaInicio").value = new Date().toLocaleTimeString('es-ES', { hour12: false }).slice(0,5);
+
+        function agregarFila() {
+            let table = document.getElementById("tablaParticipantes").getElementsByTagName('tbody')[0];
+            let rowCount = table.rows.length + 1;
+            let newRow = table.insertRow();
+            newRow.innerHTML = `
+                <td>${rowCount}</td>
+                <td><input type="text" list="nombres" required></td>
+                <td><input type="text" required></td>
+                <td><input type="text" required></td>
+                <td><input type="text" required></td>
+                <td><input type="text" required></td>
+                <td><input type="text" required></td>
+                <td><input type="text" required></td>
+            `;
+        }
+
+        document.getElementById("formRegistro").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let qrData = "Validación de Firma: " + document.getElementById("responsable").value;
+            new QRCode(document.getElementById("qrcode"), {
+                text: qrData,
+                width: 128,
+                height: 128
+            });
+            alert("Formulario enviado correctamente. Para validar la firma, escanee el QR y confirme vía email o móvil.");
+        });
+    </script>
+</body>
+</html>

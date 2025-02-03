@@ -116,31 +116,30 @@
             
             document.querySelectorAll("#tablaParticipantes tbody tr").forEach(row => {
                 let inputs = row.getElementsByTagName("input");
-                jsonData.participantes.push({
-                    nombre: inputs[0].value,
-                    cargo: inputs[1].value,
-                    chaleco: inputs[2].value,
-                    pantalon: inputs[3].value,
-                    camisa: inputs[4].value,
-                    chompa: inputs[5].value,
-                    casaca: inputs[6].value
-                });
+                if (inputs.length > 0) {
+                    jsonData.participantes.push({
+                        nombre: inputs[0].value,
+                        cargo: inputs[1].value,
+                        chaleco: inputs[2].value,
+                        pantalon: inputs[3].value,
+                        camisa: inputs[4].value,
+                        chompa: inputs[5].value,
+                        casaca: inputs[6].value
+                    });
+                }
             });
             
-            let count = localStorage.getItem("registroCount") || 0;
-            count = parseInt(count) + 1;
-            localStorage.setItem("registroCount", count);
-            let fileName = `ropa${String(count).padStart(3, '0')}.json`;
+            console.log("Datos generados:", jsonData);
             
             let jsonString = JSON.stringify(jsonData, null, 2);
             let blob = new Blob([jsonString], { type: "application/json" });
             let a = document.createElement("a");
             a.href = URL.createObjectURL(blob);
-            a.download = fileName;
+            a.download = "registro.json";
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            alert(`Formulario enviado correctamente. Se ha generado y almacenado el archivo ${fileName}`);
+            alert("Formulario enviado correctamente. JSON generado.");
         });
     </script>
 </body>

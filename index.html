@@ -104,13 +104,28 @@
             let formData = new FormData(this);
             let jsonData = {};
             formData.forEach((value, key) => { jsonData[key] = value; });
-            let jsonString = JSON.stringify(jsonData, null, 2);
+            
+            let participantes = [];
+            document.querySelectorAll("#tablaParticipantes tbody tr").forEach(row => {
+                let inputs = row.getElementsByTagName("input");
+                participantes.push({
+                    nombre: inputs[0].value,
+                    cargo: inputs[1].value,
+                    chaleco: inputs[2].value,
+                    pantalon: inputs[3].value,
+                    camisa: inputs[4].value,
+                    chompa: inputs[5].value,
+                    casaca: inputs[6].value
+                });
+            });
+            jsonData.participantes = participantes;
             
             let count = localStorage.getItem("registroCount") || 0;
             count = parseInt(count) + 1;
             localStorage.setItem("registroCount", count);
             let fileName = `ropa${String(count).padStart(3, '0')}.json`;
             
+            let jsonString = JSON.stringify(jsonData, null, 2);
             let blob = new Blob([jsonString], { type: "application/json" });
             let a = document.createElement("a");
             a.href = URL.createObjectURL(blob);

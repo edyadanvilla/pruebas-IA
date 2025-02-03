@@ -101,14 +101,22 @@
 
         document.getElementById("formRegistro").addEventListener("submit", function(event) {
             event.preventDefault();
-            let formData = new FormData(this);
-            let jsonData = {};
-            formData.forEach((value, key) => { jsonData[key] = value; });
+            let jsonData = {
+                lugar: document.getElementById("lugar").value,
+                fecha: document.getElementById("fecha").value,
+                tema: document.getElementById("tema").value,
+                capacitador: document.getElementById("capacitador").value,
+                horaInicio: document.getElementById("horaInicio").value,
+                horaFin: document.getElementById("horaFin").value,
+                observaciones: document.getElementById("observaciones").value,
+                responsable: document.getElementById("responsable").value,
+                cargo: document.getElementById("cargo").value,
+                participantes: []
+            };
             
-            let participantes = [];
             document.querySelectorAll("#tablaParticipantes tbody tr").forEach(row => {
                 let inputs = row.getElementsByTagName("input");
-                participantes.push({
+                jsonData.participantes.push({
                     nombre: inputs[0].value,
                     cargo: inputs[1].value,
                     chaleco: inputs[2].value,
@@ -118,7 +126,6 @@
                     casaca: inputs[6].value
                 });
             });
-            jsonData.participantes = participantes;
             
             let count = localStorage.getItem("registroCount") || 0;
             count = parseInt(count) + 1;
@@ -133,13 +140,6 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-            
-            let qrData = "Validación de Firma: " + document.getElementById("responsable").value;
-            new QRCode(document.getElementById("qrcode"), {
-                text: qrData,
-                width: 128,
-                height: 128
-            });
             alert(`Formulario enviado correctamente. Se ha generado y almacenado el archivo ${fileName}`);
         });
     </script>

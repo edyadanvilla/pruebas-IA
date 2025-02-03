@@ -57,24 +57,8 @@
                         <th>Casaca</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td><input type="text" list="nombres" required></td>
-                        <td><input type="text" required></td>
-                        <td><input type="text" required></td>
-                        <td><input type="text" required></td>
-                        <td><input type="text" required></td>
-                        <td><input type="text" required></td>
-                        <td><input type="text" required></td>
-                    </tr>
-                </tbody>
+                <tbody></tbody>
             </table>
-            <datalist id="nombres">
-                <option value="Juan Pérez"></option>
-                <option value="María Gómez"></option>
-                <option value="Carlos Ramírez"></option>
-            </datalist>
             <button type="button" onclick="agregarFila()">Agregar Participante</button>
             
             <h3>Observaciones</h3>
@@ -105,7 +89,7 @@
             let newRow = table.insertRow();
             newRow.innerHTML = `
                 <td>${rowCount}</td>
-                <td><input type="text" list="nombres" required></td>
+                <td><input type="text" required></td>
                 <td><input type="text" required></td>
                 <td><input type="text" required></td>
                 <td><input type="text" required></td>
@@ -117,13 +101,31 @@
 
         document.getElementById("formRegistro").addEventListener("submit", function(event) {
             event.preventDefault();
+            let formData = new FormData(this);
+            let jsonData = {};
+            formData.forEach((value, key) => { jsonData[key] = value; });
+            let jsonString = JSON.stringify(jsonData, null, 2);
+            
+            let count = localStorage.getItem("registroCount") || 0;
+            count = parseInt(count) + 1;
+            localStorage.setItem("registroCount", count);
+            let fileName = `ropa${String(count).padStart(3, '0')}.json`;
+            
+            let blob = new Blob([jsonString], { type: "application/json" });
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
             let qrData = "Validación de Firma: " + document.getElementById("responsable").value;
             new QRCode(document.getElementById("qrcode"), {
                 text: qrData,
                 width: 128,
                 height: 128
             });
-            alert("Formulario enviado correctamente. Para validar la firma, escanee el QR y confirme vía email o móvil.");
+            alert(`Formulario enviado correctamente. Se ha generado y almacenado el archivo ${fileName}`);
         });
     </script>
 </body>
